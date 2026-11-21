@@ -6,4 +6,14 @@
   --color-tierra: #D4A373;
   --color-acento: #E9C46A;
   --color-fondo: #F1FAEE;
+  --font-sans: 'Inter', sans-serif;
+  --font-display: 'Poppins', sans-serif;
+}
+
+body {
+  font-family: var(--font-sans);
+}
+
+h1, h2, h3 {
+  font-family: var(--font-display);
 }

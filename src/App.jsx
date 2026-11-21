@@ -1,122 +1,143 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+import { useState, useEffect } from 'react';
+import { AnimatePresence, motion } from 'motion/react';
+import SplashScreen from './components/SplashScreen';
+import Auth from './components/Auth';
+import Dashboard from './components/Dashboard';
+import AreaDetail from './components/AreaDetail';
+import Desafio from './components/Desafio';
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function App() {
+  const [pantalla, setPantalla] = useState('splash');
+  const [usuario, setUsuario] = useState('');
+  const [areaActiva, setAreaActiva] = useState(null);
+  const [areasCompletadas, setAreasCompletadas] = useState([]);
+
+  // 1. EFECTO PARA CARGAR EL PROGRESO AL INICIAR
+  useEffect(() => {
+    const savedUser = localStorage.getItem('bioterritorio_user');
+    const savedProgress = localStorage.getItem('bioterritorio_progreso');
+
+    if (savedUser) {
+      setUsuario(savedUser);
+      setPantalla('dashboard'); // Si ya hay usuario, salta directo al dashboard
+    }
+    if (savedProgress) {
+      try {
+        setAreasCompletadas(JSON.parse(savedProgress));
+      } catch (error) {
+        console.error("Error al leer el progreso guardado", error);
+      }
+    }
+  }, []);
+
+  const handleEnter = () => setPantalla('auth');
+  
+  const handleLogin = (nombre) => {
+    setUsuario(nombre);
+    localStorage.setItem('bioterritorio_user', nombre); // Guardamos el nombre
+    setPantalla('dashboard');
+  };
+
+  const handleSelectArea = (area) => {
+    setAreaActiva(area);
+    setPantalla('area');
+  };
+
+  const handleCompletarArea = (id) => {
+    if (!areasCompletadas.includes(id)) {
+      const nuevoProgreso = [...areasCompletadas, id];
+      setAreasCompletadas(nuevoProgreso);
+      localStorage.setItem('bioterritorio_progreso', JSON.stringify(nuevoProgreso)); // Guardamos el progreso
+    }
+    // No devolvemos al dashboard inmediatamente, dejamos que el usuario vea que se completó
+    // setPantalla('dashboard'); 
+  };
+
+  // Función extra para reiniciar el juego (útil para probar)
+  const handleReset = () => {
+    localStorage.removeItem('bioterritorio_user');
+    localStorage.removeItem('bioterritorio_progreso');
+    setUsuario('');
+    setAreasCompletadas([]);
+    setPantalla('splash');
+  };
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
+    <AnimatePresence mode="wait">
+      {pantalla === 'splash' && (
+        <motion.div
+          key="splash"
+          initial={{ opacity: 1 }}
+          exit={{ opacity: 0, scale: 1.1, filter: "blur(10px)" }}
+          transition={{ duration: 1.5, ease: 'easeInOut' }}
         >
-          Count is {count}
-        </button>
-      </section>
+          <SplashScreen onEnter={handleEnter} />
+        </motion.div>
+      )}
 
-      <div className="ticks"></div>
+      {pantalla === 'auth' && (
+        <motion.div
+          key="auth"
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -50 }}
+          transition={{ duration: 0.6, ease: 'easeOut' }}
+        >
+          <Auth onLogin={handleLogin} />
+        </motion.div>
+      )}
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+      {pantalla === 'dashboard' && (
+        <motion.div
+          key="dashboard"
+          initial={{ opacity: 0, x: 100 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -100 }}
+          transition={{ duration: 0.5 }}
+        >
+          <Dashboard 
+            usuario={usuario} 
+            areasCompletadas={areasCompletadas}
+            onSelectArea={handleSelectArea}
+            onOpenGame={() => setPantalla('juego')}
+            onReset={handleReset} // Pasamos la función de reinicio
+          />
+        </motion.div>
+      )}
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+      {pantalla === 'area' && areaActiva && (
+        <motion.div
+          key="area"
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 1.05 }}
+          transition={{ duration: 0.5 }}
+        >
+          <AreaDetail 
+            area={areaActiva} 
+            onBack={() => setPantalla('dashboard')} 
+            onComplete={handleCompletarArea}
+            // AQUÍ ESTÁ LA CLAVE: Le decimos si el área ya está completada
+            isCompleted={areasCompletadas.includes(areaActiva.id)} 
+          />
+        </motion.div>
+      )}
+
+      {pantalla === 'juego' && (
+        <motion.div
+          key="juego"
+          initial={{ opacity: 0, y: 100 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -100 }}
+          transition={{ duration: 0.5 }}
+          className="min-h-screen bg-[#F1FAEE] pt-10"
+        >
+          <button onClick={() => setPantalla('dashboard')} className="ml-8 mb-4 text-[#1B4332] font-bold flex items-center gap-2 cursor-pointer">
+            ← Volver al Panel
+          </button>
+          <Desafio />
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
 }
-
-export default App
