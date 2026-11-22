@@ -3,8 +3,23 @@ import { ArrowLeft, PlayCircle, FileText, CheckCircle, Lock, X, Trophy, RotateCc
 import { motion, AnimatePresence } from 'motion/react';
 
 const videosAreas = {
-  'los-nevados': 'https://www.youtube.com/embed/Tu_ID_Video_Nevados',
-  'rio-blanco': 'https://www.youtube.com/embed/Tu_ID_Video_RioBlanco',
+  'los-nevados': 'https://www.youtube.com/embed/tr44_1VlpbI?si=quSA4rJpkNCNwXwv',
+  'selva-florencia': 'https://www.youtube.com/embed/CC3FZ9pERrA?si=pKmg7z41uryI-qkQ',
+  'rio-blanco': 'https://www.youtube.com/embed/Blzam7Dtlbc?si=K6KAw-3yYug9kenO',
+  'el-popal': 'https://www.youtube.com/embed/YNRmDLJ1v2c?si=kzVo9toPOqksvbyx',
+  'la-linda': 'https://www.youtube.com/embed/7fLoKqXSB68?si=2ofUSpUdJ2euXTFZ',
+  'bosques-chec': 'https://www.youtube.com/embed/D2vnM1fakp0?si=XRvUoHL8KqBkbzPb',
+  'el-diamante': 'https://www.youtube.com/embed/gzda5-uSiIE?si=OmnXnlRtypzzRsLv',
+  'tarcara': 'https://www.youtube.com/embed/gMWGxlB2weg?si=GRRPWBnmzMZLt1n2',
+  'plan-alto': 'https://www.youtube.com/embed/DCDnWBbYC6U?si=GXtUC8yJzapEL9Rk',
+  'torre-4': 'https://www.youtube.com/embed/y94MGKEjHMo?si=iiCTEf8y8HaILW2I',
+  'la-marina': 'https://www.youtube.com/embed/gSvsb58fIbA?si=2qnF4F8-RMjyp77k',
+  'guarinocito': 'https://www.youtube.com/embed/M9PmjzEHMuo?si=NYo-wAfrE1dI3n2R',
+  'laguna-san-diego': 'https://www.youtube.com/embed/yjoIZuebilU?si=tB8LBwjmKUHMMJ8g',
+  'cuchilla-bellavista': 'https://www.youtube.com/embed/cQS25u-Jywk?si=1oZmLSPjRZbN4VvG',
+  'estrella-hidrica': 'https://www.youtube.com/embed/0qk5OjrMZgs?si=EQaS4Nhhrc5homaN',
+  'guacas': 'https://www.youtube.com/embed/zA6xKQPNE3U?si=GxPl2oEo9-wLSt5I',
+  'el-gigante': 'https://www.youtube.com/embed/h9XgOYgO-2c?si=oE2HQf4BQN8M1sF8',
   // Agrega los demás aquí
 };
 

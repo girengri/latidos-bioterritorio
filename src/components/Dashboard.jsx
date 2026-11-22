@@ -132,9 +132,8 @@ export default function Dashboard({ usuario, areasCompletadas, onSelectArea, onR
             <p className="text-xs mt-1">Este es un demo académico y no representa la versión oficial de Corpocaldas.</p>
           </div>
           <div className="text-center md:text-right">
-            <p className="mb-1">Imágenes de fauna y flora: <strong>Wikimedia Commons</strong>.</p>
-            <p className="mb-1">Información técnica y mapas: <strong>Corpocaldas</strong> y <strong>Parques Nacionales Naturales</strong>.</p>
-            <p className="text-xs">Iconos: Lucide. Desarrollado con React.</p>
+            <p className="mb-1">Imágenes: <strong>Corpocaldas</strong>.</p>
+            <p className="mb-1">Información técnica:<strong>Parques Nacionales Naturales</strong>.</p>
           </div>
         </div>
       </footer>
