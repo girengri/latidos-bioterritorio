@@ -41,6 +41,8 @@ import estrella from '../assets/fondos/estrella.jpg';
 import guacas from '../assets/fondos/guacas.jpg';
 import gigante from '../assets/fondos/gigante.jpg';
 
+// URL base del SIDAP (reemplaza por los PDFs específicos si los tienes)
+const SIDAP_URL = "https://sidapcaldas.corpocaldas.gov.co/";
 
 export const areas = [
   // 1. PNN Los Nevados
@@ -52,6 +54,7 @@ export const areas = [
     descripcion: 'Situado en el corazón del Eje Cafetero, este parque se destaca por las cumbres nevadas de sus tres montañas principales, que forman parte de un complejo volcánico: los Nevados del Ruiz (Kumanday), Santa Isabel (Poleka Kasue) y Tolima (Dulima). Aquí también se resguardan humedales altoandinos, bosques y páramos con un alto valor natural y cultural. Caminar por sus senderos es conocer ecosistemas que abastecen de agua a millones de habitantes en la región cafetera, mientras se descubre una biodiversidad adaptada a las condiciones extremas de la alta montaña.',
     color: '#1B4332',
     imagenFondo: nevados,
+    documentoPMA: "https://corpocaldasmzls1-my.sharepoint.com/:f:/g/personal/documentosweb_corpocaldas_gov_co/Em3HDQAJdmtBjUzU6lnyZOQBzxgx-LgjFGptN_alPILzcQ?e=AQgz1P",
     especies: [
       { nombre: 'Frailejón', tipo: 'flora', imagen: frailejon, dato: 'Especie clave para la captura de agua.' },
       { nombre: 'Cóndor de los Andes', tipo: 'fauna', imagen: condor, dato: 'Ave emblemática en peligro de extinción.' },
@@ -67,6 +70,7 @@ export const areas = [
     descripcion: 'El Parques Nacional Natural Selva de Florencia fue declarado el día 10 de marzo de 2005. Se encuentra ubicado en la Cordillera Central, al oriente del Departamento de Caldas, en los municipios de Samaná (78%) y Pensilvania (22%). Su extensión es de 10.019 hectáreas. Se encuentra ubicado en un amplio gradiente altitudinal que va desde los 850 hasta los 2400 metros, donde se presenta una variedad de climas, geología, geomorfología y suelos propios de los Andes Tropicales. Esto propicia el establecimiento de una enorme variedad de vida. La flora y fauna presente en el Parque es típica de la selva húmeda tropical, pero con elementos andinos propios de los pisos térmicos subandino y andino. El Parque es considerado la Estrella Hídrica del Oriente Caldense.',
     color: '#1B4332',
     imagenFondo: florencia,
+    documentoPMA: "https://corpocaldasmzls1-my.sharepoint.com/:f:/g/personal/documentosweb_corpocaldas_gov_co/Er740TDB-GRIijUNMyAp9TgBaeinfUK49BX2YHSjnbykkg?e=y6dvzN",
     especies: [
       { nombre: 'Rana Roja', tipo: 'fauna', imagen: ranaRoja, dato: 'Anfibio venenoso diminuto.' },
       { nombre: 'Cacique Candela', tipo: 'fauna', imagen: caciqueCandela, dato: 'Ave endémica de Colombia con vientre rojo fuego.' },
@@ -81,6 +85,7 @@ export const areas = [
     descripcion: 'La Reserva Forestal Protectora de Río Blanco y Quebrada Olivares es una de las zonas con mayor biodiversidad del mundo y conservación de los recursos naturales. Está ubicada sobre la cordillera Central Andina en el departamento de Caldas, a tres (3) km del costado nororiente del municipio de Manizales. La Reserva de Río Blanco, en su totalidad está ubicada dentro del municipio de Manizales en la zona montañosa de la gran Cuenca del Río Chinchiná, posee 4.932 hectáreas de extensión de bosque de niebla limitando con los municipios de Marulanda y Neira. Está ubicada entre los 2.150 y 3.700 msnm. La temperatura promedio es de 11°C (52°F) y tiene una humedad relativa del 90 %.',
     color: '#2D6A4F',
     imagenFondo: rioblanco,
+    documentoPMA: "https://corpocaldasmzls1-my.sharepoint.com/:f:/g/personal/documentosweb_corpocaldas_gov_co/EsK6FDO7TDZNnn7LDJX-ToYBllnttTE35TnN2Na0eygpvw?e=RQhlok",
     especies: [
       { nombre: 'Grallaria milleri', tipo: 'fauna', imagen: grallaria, dato: 'Ave endémica de los bosques de niebla.' },
       { nombre: 'Gorrion', tipo: 'fauna', imagen: gorrion, dato: 'Ave muy sociable que suele habitar ciudades.' },
@@ -95,6 +100,7 @@ export const areas = [
     descripcion: 'En la Reserva Forestal Protectora El Popal nace el agua que abastece al municipio de Pensilvania, su riqueza hídrica es la fuente de vida para las diversas especies que la habitan.',
     color: '#2D6A4F',
     imagenFondo: popal,
+    documentoPMA: "https://corpocaldasmzls1-my.sharepoint.com/:f:/g/personal/documentosweb_corpocaldas_gov_co/EoOfFXG5V_1LrAexHJ1hVdQBtayBah6kht5PfGaMrzDbYg?e=udhdce",
     especies: [
       { nombre: 'Roble Andino', tipo: 'flora', imagen: robleAndino, dato: 'Árbol de gran tamaño que protege las fuentes hídricas.' },
     ],
@@ -108,6 +114,7 @@ export const areas = [
     descripcion: 'La reserva forestal protectora La Linda en el corregimiento San Daniel de Samaná, abastece los acueductos veredales del sector.',
     color: '#2D6A4F',
     imagenFondo: linda,
+    documentoPMA: "https://corpocaldasmzls1-my.sharepoint.com/:f:/g/personal/documentosweb_corpocaldas_gov_co/EtO403lgWxVAkG2blLY6FzgBVIzOBJfgNFGvVtnujXZPDA?e=2rt0t7",
     especies: [
       { nombre: 'Zorro Perruno', tipo: 'fauna', imagen: zorroPerruno, dato: 'Cánido nocturno de Sudamérica.' },
     ],
@@ -121,6 +128,7 @@ export const areas = [
     descripcion: 'La Reserva Forestal Protectora Bosques Chec es patrimonio hídrico de #Caldas. Además de surtir el acueducto de Manizales y permitir la generación hidroeléctrica a lo largo del río Chinchiná, también protege los ecosistemas bosque altoandino y páramo.',
     color: '#2D6A4F',
     imagenFondo: chec,
+    documentoPMA: "https://corpocaldasmzls1-my.sharepoint.com/:f:/g/personal/documentosweb_corpocaldas_gov_co/Enx0dP8LAbVNlYUJegAdONABL4O0hZo-h02oU5MKXHk86g?e=S5acZ2",
     especies: [
       { nombre: 'Colibri Chillon', tipo: 'fauna', imagen: colibriChillon, dato: 'Pequeño colibrí andino de canto agudo y vibrante.' },
     ],
@@ -134,6 +142,7 @@ export const areas = [
     descripcion: 'La Reserva Forestal Protectora El Diamante es un área de conservación y fábrica natural de #biodiversidad que provee de agua a los municipios de Aranzazu y Filadelfia, Caldas.',
     color: '#2D6A4F',
     imagenFondo: diamante,
+    documentoPMA: "https://corpocaldasmzls1-my.sharepoint.com/:f:/g/personal/documentosweb_corpocaldas_gov_co/Ep4oesWHBoJPpOex8RJoFp0BBE8lcdv72AA60E4gmHdk7g?e=UykuAj",
     especies: [
       { nombre: 'Carriqui Violáceo', tipo: 'fauna', imagen: carriqui, dato: 'Ave ruidosa de plumaje azul.' },
     ],
@@ -147,6 +156,7 @@ export const areas = [
     descripcion: 'En Aguadas, Norte de Caldas, encontramos la Reserva Forestal Protectora Tarcará, cuyo buen estado de conservación de sus 727 hectáreas de bosque altoandino ha permitido un importante equilibrio ecosistémico.',
     color: '#2D6A4F',
     imagenFondo: tarcara,
+    documentoPMA: "https://corpocaldasmzls1-my.sharepoint.com/:f:/g/personal/documentosweb_corpocaldas_gov_co/EkQOvco5--FDm40paf3TEqMB0ZlyvDrAKz83y7YqDzKCQg?e=4WlhYE",
     especies: [
       { nombre: 'Cuco ardilla', tipo: 'fauna', imagen: cuco, dato: 'Ave de cola larga que salta como ardilla.' },
     ],
@@ -160,6 +170,7 @@ export const areas = [
     descripcion: 'Ubicada en límites con el municipio de Chinchiná. En estos relictos de bosques hay alrededor de 652 especies vegetales y 219 de vertebrados; gran diversidad de aves, lugar de paso en temporada de migración y hogar de otras especies.',
     color: '#2D6A4F',
     imagenFondo: planalto,
+    documentoPMA: "https://corpocaldasmzls1-my.sharepoint.com/:f:/g/personal/documentosweb_corpocaldas_gov_co/Elu32kGsW1ZArLPcp5UVsOABe4a08ZcQUt8ePmL3TET8QQ?e=X2G5J7",
     especies: [
       { nombre: 'Laurel blanco', tipo: 'flora', imagen: laurel, dato: 'Árbol nativo utilizado como sombrío en cafetales' },
     ],
@@ -173,6 +184,7 @@ export const areas = [
     descripcion: 'La Reserva Forestal Protectora Torre 4 tiene 310 hectáreas de extensión y es hábitat de diversas especies, entre ellos el hermosos colibrí paramuno.',
     color: '#2D6A4F',
     imagenFondo: torrecuatro,
+    documentoPMA: "https://corpocaldasmzls1-my.sharepoint.com/:f:/g/personal/documentosweb_corpocaldas_gov_co/Ejer97k76YJLjkTn_w6iKIMBR-du-GRGk3n19oJ8qvNUdg?e=VpnEBl",
     especies: [
       { nombre: 'Cusumbo', tipo: 'fauna', imagen: cusumbo, dato: 'Mamífero sociable de hocico alargado.' },
     ],
@@ -186,6 +198,7 @@ export const areas = [
     descripcion: 'La Reserva Forestal Protectora La Marina, ubicada en el municipio de Villamaría. Su vegetación de bosque alto andino está conformado por robles, yarumos blancos y cedros entre otras especies',
     color: '#2D6A4F',
     imagenFondo: marina,
+    documentoPMA: "https://corpocaldasmzls1-my.sharepoint.com/:f:/g/personal/documentosweb_corpocaldas_gov_co/EjZarTIY8hBIg3AEOiLVfHUBNZel45i59TxX6MZ5SCDc2g?e=iJEKRq",
     especies: [
       { nombre: 'Yarumo Blanco', tipo: 'flora', imagen: yarumo, dato: 'Árbol pionero que alberga hormigas.' },
     ],
@@ -198,7 +211,8 @@ export const areas = [
     ecosistema: 'Bosque andino',
     descripcion: 'La reserva forestal protectora de Sabinas, en Manizales, fue objeto de conservación con el fin de dar un uso adecuado a los suelos de ladera. Son 186 hectáreas asociadas a la bocatoma de Gallinazo, que hace parte del acueducto de la ciudad..',
     color: '#2D6A4F',
-    imagenFondo: "fondoBosqueAndino",
+    imagenFondo: "fondoBosqueAndino", // Ojo: no importaste este fondo en tus imports. Te sugiero usar rioblanco o chec. Lo dejo como string para que no rompa el código.
+    documentoPMA: "https://corpocaldasmzls1-my.sharepoint.com/:f:/g/personal/documentosweb_corpocaldas_gov_co/EmX9i81H3phGsGoQrMvJE7wBVDs7oZ9uA6mGsM2iGtD_hQ?e=aDGT6i",
     especies: [
       { nombre: 'Rana Roja', tipo: 'fauna', imagen: ranaRoja, dato: 'Anfibio venenoso de la hojarasca.' },
     ],
@@ -212,6 +226,7 @@ export const areas = [
     descripcion: 'Ubicada a tan solo 25 minutos del casco urbano de La Dorada, Caldas y a unas tres horas y media de Manizales, por la vía que conduce a Honda, la charca se extiende sobre un área aproximada de 64 hectáreas, con una longitud cercana a los 3 kilómetros y un ancho promedio de 250 metros en su parte más amplia. Su profundidad varía según la temporada: alrededor de 2,5 metros en verano y hasta 4,5 metros en invierno, lo que la convierte en un regulador natural del agua en esta zona ribereña del Magdalena Medio.',
     color: '#D4A373',
     imagenFondo: guarinocito,
+    documentoPMA: "https://corpocaldasmzls1-my.sharepoint.com/:f:/g/personal/documentosweb_corpocaldas_gov_co/EpmOyPs8lAhIvBJKVglGO2QBpsAHxccInzW5FVBoqOTRPw?e=s4GcEb",
     especies: [
       { nombre: 'Chauna Chavaria', tipo: 'fauna', imagen: chauna, dato: 'Ave grande de canto potente.' },
       { nombre: 'Ardilla Roja', tipo: 'fauna', imagen: ardillaRoja, dato: 'Mamífero omnívoro de la región.' },
@@ -226,6 +241,7 @@ export const areas = [
     descripcion: 'La Laguna de San Diego se ubica en el corregimiento de San Diego, municipio de Samaná, en el departamento de Caldas. Este cuerpo de agua se formó en la caldera de un antiguo volcán, conocido como el maar de San Diego, y está acompañado por el Morro de San Diego, un cono volcánico que se eleva aproximadamente a 450 metros sobre el nivel de la laguna..',
     color: '#D4A373',
     imagenFondo: sandiego,
+    documentoPMA: "https://corpocaldasmzls1-my.sharepoint.com/:f:/g/personal/documentosweb_corpocaldas_gov_co/Ekjq4SLdqWpEqJdwRedDLpwBvR4vlYXO0BYfz8-0im3gMQ?e=X1oa4S",
     especies: [
       { nombre: 'Serpiente Lomo Machete', tipo: 'fauna', imagen: serpienteLomo, dato: 'Serpiente verde rápida y no venenosa.' },
     ],
@@ -239,6 +255,7 @@ export const areas = [
     descripcion: 'El Distrito de Manejo Integrado, Cuchilla de Bellavista, ubicado en el municipio de Victoria, Caldas, es un extenso valle interandino del Magdalena Medio que alberga al tití gris, uno de los primates más importantes del Departamento. Las diversas especies de árboles han ayudado en protección de las fuentes hídricas y en la conexión de zonas boscosas',
     color: '#D4A373',
     imagenFondo: bellavista,
+    documentoPMA: "https://corpocaldasmzls1-my.sharepoint.com/:f:/g/personal/documentosweb_corpocaldas_gov_co/Et7hkcQXSw9Auzu0LCao_dMBc4Bj1DytEKBrBn5L9w5SSA?e=Emb0H9",
     especies: [
       { nombre: 'Bienparado Mayor', tipo: 'fauna', imagen: bienparado, dato: 'Ave nocturna experta en camuflaje.' },
     ],
@@ -251,7 +268,8 @@ export const areas = [
     ecosistema: 'Bosque andino',
     descripcion: 'Área de manejo integrado en la cordillera Central.',
     color: '#D4A373',
-    imagenFondo: "fondoBosqueAndino",
+    imagenFondo: "fondoBosqueAndino", // Mismo caso, no está importado.
+    documentoPMA: "https://corpocaldasmzls1-my.sharepoint.com/:f:/g/personal/documentosweb_corpocaldas_gov_co/Em2TMnzpB6RJqVBWqQtWGm8B7u6bZCgq1O37reRL1uBo0Q?e=BM3czU",
     especies: [
       { nombre: 'Cóndor de los Andes', tipo: 'fauna', imagen: condor, dato: 'Ave emblemática de los Andes.' },
     ],
@@ -265,6 +283,7 @@ export const areas = [
     descripcion: 'El área protegida abarca 23.972 hectáreas conformada por ecosistemas estratégicos de alta montaña, de los que depende la seguridad hídrica de 250 mil habitantes, una cuarta parte de la población departamental. Está ubicada entre los municipios de Manizales, Neira, Aranzazu, Salamina y Marulanda en la Cordillera Central. Además, limita con las Reservas Forestales Protectoras (RFP) de las cuencas hidrográficas del Río Blanco y la RFP El Diamante.',
     color: '#D4A373',
     imagenFondo: estrella,
+    documentoPMA: SIDAP_URL,
     especies: [
       { nombre: 'Zorro Perruno', tipo: 'flora', imagen: zorroPerruno, dato: 'Cánido nocturno de Sudamérica' },
     ],
@@ -278,6 +297,7 @@ export const areas = [
     descripcion: 'El Distrito de Conservación de Suelos (DCS) Guacas-Rosario es un área protegida de uso sostenible ubicada en la zona rural de Manizales, Caldas (en la parte baja de la cuenca del río Chinchiná), declarada en mayo de 2009 por Corpocaldas para recuperar suelos degradados, controlar la erosión y proteger los servicios ecosistémicos.',
     color: '#E9C46A',
     imagenFondo: guacas,
+    documentoPMA: "https://corpocaldasmzls1-my.sharepoint.com/:f:/g/personal/documentosweb_corpocaldas_gov_co/Ekb5_MkVIRhKtLFuIKwPOsUByyQw1-GDnO1I06jZnjvs5Q?e=BroRiY",
     especies: [
       { nombre: 'Mariposa', tipo: 'flora', imagen: mariposaMorpho, dato: 'Mariposa grande de azul brillante.' },
     ],
@@ -291,6 +311,7 @@ export const areas = [
     descripcion: 'Área protegida del departamento de Caldas que cuenta con fragmentos de bosque con palmas de cera, cedro negro, roble y pino colombiano.',
     color: '#E9C46A',
     imagenFondo: gigante,
+    documentoPMA: "https://corpocaldasmzls1-my.sharepoint.com/:f:/g/personal/documentosweb_corpocaldas_gov_co/EmaQzTf4f1VNpqhrjHjiBbAB4JKcA8ApB8sMEZvsmUzmAQ?e=exeG9h",
     especies: [
       { nombre: 'Palma de Cera', tipo: 'flora', imagen: palmaCera, dato: 'Planta con tronco leñoso y hojas grandes.' },
     ],

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ArrowLeft, PlayCircle, FileText, CheckCircle, Lock, X, Trophy, RotateCcw, XCircle, Heart, Clock, HelpCircle, Lightbulb } from 'lucide-react';
+import { ArrowLeft, PlayCircle, FileText, CheckCircle, Lock, X, Trophy, RotateCcw, XCircle, Heart, Clock, HelpCircle, Lightbulb, ExternalLink } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 const videosAreas = {
@@ -20,10 +20,8 @@ const videosAreas = {
   'estrella-hidrica': 'https://www.youtube.com/embed/0qk5OjrMZgs?si=EQaS4Nhhrc5homaN',
   'guacas': 'https://www.youtube.com/embed/zA6xKQPNE3U?si=GxPl2oEo9-wLSt5I',
   'el-gigante': 'https://www.youtube.com/embed/h9XgOYgO-2c?si=oE2HQf4BQN8M1sF8',
-  // Agrega los demás aquí
 };
 
-// --- PREGUNTAS DE EJEMPLO (5 preguntas, 4 opciones) ---
 const preguntasPorArea = {
   'los-nevados': [
     { 
@@ -59,7 +57,6 @@ const preguntasPorArea = {
   ]
 };
 
-// Preguntas generales (5 preguntas, 4 opciones)
 const preguntasGenerales = [
   { 
     pregunta: "¿Qué instrumento técnico rige la administración de esta área?", 
@@ -96,12 +93,10 @@ const preguntasGenerales = [
 export default function AreaDetail({ area, onBack, onComplete, isCompleted }) {
   const videoUrl = videosAreas[area.id] || 'https://www.youtube.com/embed/8K7w5m5b6c0'; 
   
-  // Estados del Juego
   const [isQuizOpen, setIsQuizOpen] = useState(false);
   const [indicePregunta, setIndicePregunta] = useState(0);
   const [respuestaSeleccionada, setRespuestaSeleccionada] = useState(null);
   
-  // 2 Vidas, Tiempo (60s), Comodines y Aciertos
   const [vidas, setVidas] = useState(2);
   const [aciertos, setAciertos] = useState(0);
   const [tiempo, setTiempo] = useState(60);
@@ -114,30 +109,22 @@ export default function AreaDetail({ area, onBack, onComplete, isCompleted }) {
   const preguntas = preguntasPorArea[area.id] || preguntasGenerales;
   const preguntaActual = preguntas[indicePregunta];
 
-  // ESTADO NUEVO: Aquí guardaremos las respuestas mezcladas de la pregunta actual
   const [opcionesMezcladas, setOpcionesMezcladas] = useState([]);
 
-  // EFECTO: Cada vez que cambia la pregunta o se abre el quiz, mezclamos las respuestas
   useEffect(() => {
     if (isQuizOpen && preguntaActual) {
-      // 1. Convertimos las opciones en objetos para saber cuál es la correcta
       const opcionesConEstado = preguntaActual.opciones.map((texto, index) => ({
         texto,
         isCorrecta: index === preguntaActual.correcta
       }));
-      
-      // 2. Algoritmo de Fisher-Yates para mezclar aleatoriamente
       for (let i = opcionesConEstado.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [opcionesConEstado[i], opcionesConEstado[j]] = [opcionesConEstado[j], opcionesConEstado[i]];
       }
-      
-      // 3. Guardamos el resultado en el estado
       setOpcionesMezcladas(opcionesConEstado);
     }
   }, [indicePregunta, isQuizOpen, preguntaActual]);
 
-  // Lógica del Temporizador
   useEffect(() => {
     let intervalo;
     if (isQuizOpen && estadoJuego === 'jugando' && respuestaSeleccionada === null && tiempo > 0) {
@@ -152,10 +139,7 @@ export default function AreaDetail({ area, onBack, onComplete, isCompleted }) {
 
   const handleRespuesta = (index) => {
     if (respuestaSeleccionada !== null) return; 
-    
     setRespuestaSeleccionada(index);
-    
-    // Verificamos si la opción elegida es la correcta (ignorando el -1 por tiempo)
     const esCorrecta = index !== -1 && opcionesMezcladas[index].isCorrecta;
 
     if (esCorrecta) {
@@ -171,7 +155,6 @@ export default function AreaDetail({ area, onBack, onComplete, isCompleted }) {
 
   const handleSiguiente = () => {
     if (vidas === 0) return;
-
     if (indicePregunta < preguntas.length - 1) {
       setIndicePregunta(indicePregunta + 1);
       setRespuestaSeleccionada(null);
@@ -201,16 +184,9 @@ export default function AreaDetail({ area, onBack, onComplete, isCompleted }) {
     onComplete(area.id);
   };
 
-  // Comodines
   const usarCincuenta = () => {
     if (!comodines.cincuenta || respuestaSeleccionada !== null) return;
-    
-    // Buscamos los índices de las respuestas incorrectas en el arreglo mezclado
-    const incorrectas = opcionesMezcladas
-      .map((opt, i) => (!opt.isCorrecta ? i : null))
-      .filter(i => i !== null);
-      
-    // Ocultamos 2 incorrectas al azar
+    const incorrectas = opcionesMezcladas.map((opt, i) => (!opt.isCorrecta ? i : null)).filter(i => i !== null);
     const aOcultar = incorrectas.sort(() => 0.5 - Math.random()).slice(0, 2); 
     setOpcionesOcultas(aOcultar);
     setComodines({ ...comodines, cincuenta: false });
@@ -243,12 +219,25 @@ export default function AreaDetail({ area, onBack, onComplete, isCompleted }) {
 
         <div className="max-w-4xl mx-auto p-8 pt-0">
           
-          {/* Normatividad */}
+          {/* Normatividad y Enlace al PMA */}
           <div className="mb-12 bg-black/50 backdrop-blur-md border-l-4 rounded-2xl p-6 flex flex-col md:flex-row items-center gap-6 shadow-xl" style={{ borderLeftColor: area.color }}>
-            <div className="p-4 rounded-full bg-white/10"><FileText className="w-8 h-8" style={{ color: area.color }} /></div>
-            <div>
+            <div className="p-4 rounded-full bg-white/10 shrink-0"><FileText className="w-8 h-8" style={{ color: area.color }} /></div>
+            <div className="flex-1">
               <h3 className="text-xl font-bold mb-2 text-white">Instrumento de Planificación</h3>
-              <p className="text-gray-300 text-sm leading-relaxed">Esta área se rige por su <strong>Plan de Manejo Ambiental (PMA)</strong>. Como administrador, tu labor es garantizar que las actividades humanas se realicen según la zonificación técnica.</p>
+              <p className="text-gray-300 text-sm leading-relaxed mb-4">Esta área se rige por su <strong>Plan de Manejo Ambiental (PMA)</strong>. Como administrador, tu labor es garantizar que las actividades humanas se realicen según la zonificación técnica.</p>
+              
+              {/* BOTÓN DEL PMA AGREGADO AQUÍ */}
+              {area.documentoPMA && (
+                <a 
+                  href={area.documentoPMA} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-bold text-white transition-all hover:brightness-110 shadow-lg cursor-pointer"
+                  style={{ backgroundColor: area.color }}
+                >
+                  <ExternalLink className="w-4 h-4" /> Ver Documento del PMA
+                </a>
+              )}
             </div>
           </div>
 
@@ -303,7 +292,6 @@ export default function AreaDetail({ area, onBack, onComplete, isCompleted }) {
             
             <motion.div initial={{ opacity: 0, scale: 0.9, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.9, y: 20 }} className="bg-[#111827] border border-white/10 rounded-3xl shadow-2xl w-full max-w-2xl relative z-10 overflow-hidden flex flex-col">
               
-              {/* Header del Juego */}
               <div className="p-4 border-b border-white/10 flex justify-between items-center bg-black/20">
                 <div className="flex items-center gap-4">
                   <div className="flex gap-1">
@@ -319,7 +307,6 @@ export default function AreaDetail({ area, onBack, onComplete, isCompleted }) {
               </div>
 
               <div className="p-8">
-                {/* ESTADO JUGANDO */}
                 {estadoJuego === 'jugando' && (
                   <>
                     <div className="flex justify-between items-center mb-6">
@@ -344,10 +331,8 @@ export default function AreaDetail({ area, onBack, onComplete, isCompleted }) {
                     )}
 
                     <div className="space-y-3">
-                      {/* AQUÍ USAMOS LAS OPCIONES MEZCLADAS EN VEZ DE LAS ORIGINALES */}
                       {opcionesMezcladas.map((opcion, index) => {
                         if (opcionesOcultas.includes(index)) return null; 
-
                         let buttonClass = "border-white/10 hover:border-white/30 text-gray-300";
                         let Icon = null;
 
@@ -386,7 +371,6 @@ export default function AreaDetail({ area, onBack, onComplete, isCompleted }) {
                   </>
                 )}
 
-                {/* ESTADO VICTORIA */}
                 {estadoJuego === 'victoria' && (
                   <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="text-center py-6">
                     <Trophy className="w-20 h-20 mx-auto mb-4 text-yellow-400 drop-shadow-[0_0_15px_rgba(250,204,21,0.5)]" />
@@ -399,7 +383,6 @@ export default function AreaDetail({ area, onBack, onComplete, isCompleted }) {
                   </motion.div>
                 )}
 
-                {/* ESTADO DERROTA */}
                 {estadoJuego === 'derrota' && (
                   <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="text-center py-6">
                     <XCircle className="w-20 h-20 mx-auto mb-4 text-red-500" />

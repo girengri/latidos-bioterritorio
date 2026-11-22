@@ -1,14 +1,18 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { CheckCircle, Map, TreePine, Shield, Droplets, X, ArrowRight, HelpCircle, Trophy, Heart, Clock, Lightbulb, QrCode } from 'lucide-react';
-import { QRCodeSVG } from 'qrcode.react'; // Importamos el generador de QR
+import { CheckCircle, Map, TreePine, Shield, Droplets, X, ArrowRight, HelpCircle, Trophy, Heart, Clock, Lightbulb, QrCode, AlertTriangle } from 'lucide-react';
+import { QRCodeSVG } from 'qrcode.react';
+import confetti from 'canvas-confetti'; // <-- Importamos el confeti
 import MapaCaldas from './MapaCaldas';
 import { areas } from '../data/areas';
 
 export default function Dashboard({ usuario, areasCompletadas, onSelectArea, onReset }) {
   const [categoriaAbierta, setCategoriaAbierta] = useState(null);
   const [mostrarInstrucciones, setMostrarInstrucciones] = useState(false);
-  const [mostrarQR, setMostrarQR] = useState(false); // Estado para el modal del QR
+  const [mostrarQR, setMostrarQR] = useState(false);
+  const [mostrarReset, setMostrarReset] = useState(false); // Modal de reinicio
+  const [mostrarVictoria, setMostrarVictoria] = useState(false); // Modal de victoria
+  const [yaSeMostroVictoria, setYaSeMostroVictoria] = useState(false); // Evita que salga 2 veces
 
   const categorias = [
     { id: 'pnn', nombre: 'Parques Nacionales', icono: TreePine, color: 'bg-[#1B4332]', areaIds: ['los-nevados', 'selva-florencia'] },
@@ -18,6 +22,39 @@ export default function Dashboard({ usuario, areasCompletadas, onSelectArea, onR
   ];
 
   const areasDeCategoria = categoriaAbierta ? areas.filter(a => categoriaAbierta.areaIds.includes(a.id)) : [];
+
+  // --- LÓGICA DEL CONFETI Y VICTORIA ---
+  useEffect(() => {
+    if (areasCompletadas.length === 19 && !yaSeMostroVictoria) {
+      setMostrarVictoria(true);
+      setYaSeMostroVictoria(true);
+
+      // Animación de confeti (dura 4 segundos)
+      const duration = 4000;
+      const animationEnd = Date.now() + duration;
+      const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 9999 };
+
+      const randomInRange = (min, max) => Math.random() * (max - min) + min;
+
+      const interval = setInterval(function() {
+        const timeLeft = animationEnd - Date.now();
+
+        if (timeLeft <= 0) {
+          return clearInterval(interval);
+        }
+
+        const particleCount = 50 * (timeLeft / duration);
+        confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } });
+        confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } });
+      }, 250);
+    }
+  }, [areasCompletadas, yaSeMostroVictoria]);
+
+  const confirmarReset = () => {
+    setMostrarReset(false);
+    setYaSeMostroVictoria(false); // Reseteamos el estado para que vuelva a salir si lo logra de nuevo
+    onReset();
+  };
 
   return (
     <div className="min-h-screen bg-[#F1FAEE] flex flex-col relative">
@@ -33,7 +70,10 @@ export default function Dashboard({ usuario, areasCompletadas, onSelectArea, onR
               <p className="text-[#E9C46A]">Gestor del Bioterritorio - Progreso: {areasCompletadas.length} de 19 áreas</p>
             </div>
             <div className="flex items-center gap-4">
-              <button onClick={onReset} className="text-xs bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-full transition-colors cursor-pointer hidden md:block">
+              <button 
+                onClick={() => setMostrarReset(true)} 
+                className="text-xs bg-white/10 hover:bg-red-500/80 px-3 py-1.5 rounded-full transition-colors cursor-pointer hidden md:block border border-white/20"
+              >
                 Reiniciar Juego
               </button>
               <div className="w-16 h-16 bg-[#E9C46A] rounded-full flex items-center justify-center text-[#1B4332] font-bold text-2xl shadow-lg border-4 border-white">
@@ -69,13 +109,11 @@ export default function Dashboard({ usuario, areasCompletadas, onSelectArea, onR
 
       {/* CONTENIDO PRINCIPAL */}
       <div className="max-w-6xl mx-auto px-6 mt-8 grid grid-cols-1 lg:grid-cols-3 gap-8 flex-grow">
-        {/* Mapa */}
         <div className="lg:col-span-2 space-y-6">
           <h2 className="text-2xl font-bold text-[#1B4332]">Mapa de Áreas Protegidas</h2>
           <MapaCaldas onSelectArea={onSelectArea} />
         </div>
 
-        {/* Panel Derecho */}
         <div className="space-y-6">
           <h2 className="text-2xl font-bold text-[#1B4332]">Categorías de Gestión</h2>
           <div className="grid grid-cols-1 gap-4">
@@ -102,22 +140,12 @@ export default function Dashboard({ usuario, areasCompletadas, onSelectArea, onR
             })}
           </div>
           
-          {/* Botones de Acción (QR e Instrucciones) */}
           <div className="grid grid-cols-2 gap-3 mt-4">
-            <button 
-              onClick={() => setMostrarInstrucciones(true)}
-              className="w-full bg-white border-2 border-[#E9C46A] text-[#1B4332] p-4 rounded-2xl font-bold text-base shadow-lg hover:bg-[#F1FAEE] transition-colors flex flex-col items-center justify-center gap-2 cursor-pointer"
-            >
-              <HelpCircle className="w-6 h-6 text-[#E9C46A]" />
-              ¿Cómo jugar?
+            <button onClick={() => setMostrarInstrucciones(true)} className="w-full bg-white border-2 border-[#E9C46A] text-[#1B4332] p-4 rounded-2xl font-bold text-base shadow-lg hover:bg-[#F1FAEE] transition-colors flex flex-col items-center justify-center gap-2 cursor-pointer">
+              <HelpCircle className="w-6 h-6 text-[#E9C46A]" /> ¿Cómo jugar?
             </button>
-            
-            <button 
-              onClick={() => setMostrarQR(true)}
-              className="w-full bg-white border-2 border-[#2D6A4F] text-[#1B4332] p-4 rounded-2xl font-bold text-base shadow-lg hover:bg-[#F1FAEE] transition-colors flex flex-col items-center justify-center gap-2 cursor-pointer"
-            >
-              <QrCode className="w-6 h-6 text-[#2D6A4F]" />
-              Escanear QR
+            <button onClick={() => setMostrarQR(true)} className="w-full bg-white border-2 border-[#2D6A4F] text-[#1B4332] p-4 rounded-2xl font-bold text-base shadow-lg hover:bg-[#F1FAEE] transition-colors flex flex-col items-center justify-center gap-2 cursor-pointer">
+              <QrCode className="w-6 h-6 text-[#2D6A4F]" /> Escanear QR
             </button>
           </div>
         </div>
@@ -132,8 +160,9 @@ export default function Dashboard({ usuario, areasCompletadas, onSelectArea, onR
             <p className="text-xs mt-1">Este es un demo académico y no representa la versión oficial de Corpocaldas.</p>
           </div>
           <div className="text-center md:text-right">
-            <p className="mb-1">Imágenes: <strong>Corpocaldas</strong>.</p>
-            <p className="mb-1">Información técnica:<strong>Parques Nacionales Naturales</strong>.</p>
+            <p className="mb-1">Imágenes de fauna y flora: <strong>Wikimedia Commons</strong>.</p>
+            <p className="mb-1">Información técnica y mapas: <strong>Corpocaldas</strong> y <strong>Parques Nacionales Naturales</strong>.</p>
+            <p className="text-xs">Iconos: Lucide. Desarrollado con React.</p>
           </div>
         </div>
       </footer>
@@ -267,6 +296,53 @@ export default function Dashboard({ usuario, areasCompletadas, onSelectArea, onR
           </div>
         )}
       </AnimatePresence>
+
+      {/* MODAL DE CONFIRMACIÓN DE REINICIO */}
+      <AnimatePresence>
+        {mostrarReset && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setMostrarReset(false)} className="absolute inset-0 bg-black/80 backdrop-blur-md cursor-pointer"></motion.div>
+            
+            <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }} className="bg-white rounded-3xl shadow-2xl w-full max-w-sm relative z-10 p-6 text-center">
+              <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <AlertTriangle className="w-8 h-8 text-red-600" />
+              </div>
+              <h3 className="text-2xl font-bold text-[#1B4332] mb-2">¿Reiniciar Progreso?</h3>
+              <p className="text-gray-600 text-sm mb-6">Estás a punto de borrar todas tus insignias y volver a empezar. Esta acción no se puede deshacer.</p>
+              
+              <div className="flex gap-3">
+                <button onClick={() => setMostrarReset(false)} className="flex-1 py-3 rounded-xl font-bold text-gray-600 bg-gray-100 hover:bg-gray-200 transition-colors cursor-pointer">
+                  Cancelar
+                </button>
+                <button onClick={confirmarReset} className="flex-1 py-3 rounded-xl font-bold text-white bg-red-600 hover:bg-red-700 transition-colors shadow-lg cursor-pointer">
+                  Sí, borrar
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* MODAL DE VICTORIA (19/19) */}
+      <AnimatePresence>
+        {mostrarVictoria && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 bg-black/80 backdrop-blur-md"></motion.div>
+            
+            <motion.div initial={{ opacity: 0, scale: 0.8, y: 50 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.8, y: 50 }} className="bg-gradient-to-br from-[#E9C46A] to-[#F4A261] rounded-3xl shadow-[0_0_50px_rgba(233,196,106,0.6)] w-full max-w-lg relative z-10 p-10 text-center border-4 border-white">
+              <Trophy className="w-24 h-24 text-white mx-auto mb-6 drop-shadow-lg animate-bounce" />
+              <h2 className="text-4xl font-extrabold text-[#1B4332] mb-4">¡Felicidades, {usuario}!</h2>
+              <p className="text-[#1B4332] font-medium text-lg mb-8">
+                Has completado las 19 áreas del SIDAP Caldas y te has convertido oficialmente en el <strong>Administrador del Bioterritorio</strong>. ¡Gracias por proteger la vida en Caldas!
+              </p>
+              <button onClick={() => setMostrarVictoria(false)} className="bg-[#1B4332] text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-[#2D6A4F] transition-all shadow-xl cursor-pointer">
+                Seguir Explorando
+              </button>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
     </div>
   );
 }
