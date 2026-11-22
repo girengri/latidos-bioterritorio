@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { CheckCircle, Map, TreePine, Shield, Droplets, X, ArrowRight, HelpCircle, Trophy, Heart, Clock, Lightbulb } from 'lucide-react';
+import { CheckCircle, Map, TreePine, Shield, Droplets, X, ArrowRight, HelpCircle, Trophy, Heart, Clock, Lightbulb, QrCode } from 'lucide-react';
+import { QRCodeSVG } from 'qrcode.react'; // Importamos el generador de QR
 import MapaCaldas from './MapaCaldas';
 import { areas } from '../data/areas';
 
 export default function Dashboard({ usuario, areasCompletadas, onSelectArea, onReset }) {
   const [categoriaAbierta, setCategoriaAbierta] = useState(null);
   const [mostrarInstrucciones, setMostrarInstrucciones] = useState(false);
+  const [mostrarQR, setMostrarQR] = useState(false); // Estado para el modal del QR
 
   const categorias = [
     { id: 'pnn', nombre: 'Parques Nacionales', icono: TreePine, color: 'bg-[#1B4332]', areaIds: ['los-nevados', 'selva-florencia'] },
@@ -18,14 +20,13 @@ export default function Dashboard({ usuario, areasCompletadas, onSelectArea, onR
   const areasDeCategoria = categoriaAbierta ? areas.filter(a => categoriaAbierta.areaIds.includes(a.id)) : [];
 
   return (
-    <div className="min-h-screen bg-[#F1FAEE] pb-20 relative">
+    <div className="min-h-screen bg-[#F1FAEE] flex flex-col relative">
       
       {/* HEADER TIPO ÁLBUM CON INSIGNIAS */}
       <div className="bg-[#1B4332] text-white pt-10 pb-8 px-6 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-[#2D6A4F] rounded-full blur-3xl opacity-50 -mr-20 -mt-20"></div>
         
         <div className="max-w-6xl mx-auto relative z-10">
-          {/* Fila superior: Saludo y Avatar */}
           <div className="flex items-center justify-between mb-8">
             <div>
               <h1 className="text-3xl font-bold mb-1">Hola, {usuario} 👋</h1>
@@ -41,7 +42,7 @@ export default function Dashboard({ usuario, areasCompletadas, onSelectArea, onR
             </div>
           </div>
 
-          {/* Fila de Insignias (Logros) */}
+          {/* Fila de Insignias */}
           <div className="bg-black/20 p-4 rounded-2xl backdrop-blur-sm border border-white/10">
             <p className="text-sm text-gray-300 mb-3 flex items-center gap-2">
               <Trophy className="w-4 h-4 text-[#E9C46A]" /> Colección de Insignias
@@ -54,9 +55,7 @@ export default function Dashboard({ usuario, areasCompletadas, onSelectArea, onR
                     key={area.id}
                     title={area.nombre}
                     className={`w-8 h-8 rounded-full flex items-center justify-center border-2 transition-all duration-500
-                      ${isCompleted 
-                        ? 'border-white shadow-[0_0_10px_rgba(255,255,255,0.5)] scale-110' 
-                        : 'border-white/20 grayscale opacity-30'}`}
+                      ${isCompleted ? 'border-white shadow-[0_0_10px_rgba(255,255,255,0.5)] scale-110' : 'border-white/20 grayscale opacity-30'}`}
                     style={{ backgroundColor: isCompleted ? area.color : '#4B5563' }}
                   >
                     <Trophy className={`w-4 h-4 ${isCompleted ? 'text-white' : 'text-gray-400'}`} />
@@ -68,21 +67,21 @@ export default function Dashboard({ usuario, areasCompletadas, onSelectArea, onR
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-6 mt-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Mapa a la izquierda */}
+      {/* CONTENIDO PRINCIPAL */}
+      <div className="max-w-6xl mx-auto px-6 mt-8 grid grid-cols-1 lg:grid-cols-3 gap-8 flex-grow">
+        {/* Mapa */}
         <div className="lg:col-span-2 space-y-6">
           <h2 className="text-2xl font-bold text-[#1B4332]">Mapa de Áreas Protegidas</h2>
           <MapaCaldas onSelectArea={onSelectArea} />
         </div>
 
-        {/* Categorías a la derecha */}
+        {/* Panel Derecho */}
         <div className="space-y-6">
           <h2 className="text-2xl font-bold text-[#1B4332]">Categorías de Gestión</h2>
           <div className="grid grid-cols-1 gap-4">
             {categorias.map((cat) => {
               const completadasCat = cat.areaIds.filter(id => areasCompletadas.includes(id)).length;
               const totalCat = cat.areaIds.length;
-
               return (
                 <motion.div
                   key={cat.id}
@@ -103,15 +102,42 @@ export default function Dashboard({ usuario, areasCompletadas, onSelectArea, onR
             })}
           </div>
           
-          {/* BOTÓN DE INSTRUCCIONES */}
-          <button 
-            onClick={() => setMostrarInstrucciones(true)}
-            className="w-full bg-white border-2 border-[#E9C46A] text-[#1B4332] p-5 rounded-2xl font-bold text-xl shadow-lg hover:bg-[#F1FAEE] transition-colors flex items-center justify-center gap-3 cursor-pointer mt-4"
-          >
-            ¿Cómo jugar? <HelpCircle className="w-6 h-6 text-[#E9C46A]" />
-          </button>
+          {/* Botones de Acción (QR e Instrucciones) */}
+          <div className="grid grid-cols-2 gap-3 mt-4">
+            <button 
+              onClick={() => setMostrarInstrucciones(true)}
+              className="w-full bg-white border-2 border-[#E9C46A] text-[#1B4332] p-4 rounded-2xl font-bold text-base shadow-lg hover:bg-[#F1FAEE] transition-colors flex flex-col items-center justify-center gap-2 cursor-pointer"
+            >
+              <HelpCircle className="w-6 h-6 text-[#E9C46A]" />
+              ¿Cómo jugar?
+            </button>
+            
+            <button 
+              onClick={() => setMostrarQR(true)}
+              className="w-full bg-white border-2 border-[#2D6A4F] text-[#1B4332] p-4 rounded-2xl font-bold text-base shadow-lg hover:bg-[#F1FAEE] transition-colors flex flex-col items-center justify-center gap-2 cursor-pointer"
+            >
+              <QrCode className="w-6 h-6 text-[#2D6A4F]" />
+              Escanear QR
+            </button>
+          </div>
         </div>
       </div>
+
+      {/* FOOTER DE CRÉDITOS */}
+      <footer className="mt-16 bg-[#1B4332] text-white py-8 px-6 border-t border-[#2D6A4F]">
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-300">
+          <div className="text-center md:text-left">
+            <p className="font-bold text-[#E9C46A] mb-1">Latidos del Bioterritorio</p>
+            <p>Prototipo demostrativo para la apropiación del SIDAP Caldas.</p>
+            <p className="text-xs mt-1">Este es un demo académico y no representa la versión oficial de Corpocaldas.</p>
+          </div>
+          <div className="text-center md:text-right">
+            <p className="mb-1">Imágenes de fauna y flora: <strong>Wikimedia Commons</strong>.</p>
+            <p className="mb-1">Información técnica y mapas: <strong>Corpocaldas</strong> y <strong>Parques Nacionales Naturales</strong>.</p>
+            <p className="text-xs">Iconos: Lucide. Desarrollado con React.</p>
+          </div>
+        </div>
+      </footer>
 
       {/* MODAL DE CATEGORÍA */}
       <AnimatePresence>
@@ -198,9 +224,45 @@ export default function Dashboard({ usuario, areasCompletadas, onSelectArea, onR
                   </div>
                 </div>
 
-                <button onClick={() => setMostrarInstrucciones(false)} className="w-full py-4 rounded-xl font-bold text-white text-lg bg-[#2D6A4F] hover:bg-[#1B4332] transition-colors shadow-lg mt-4 cursor-pointer">
+                <button onClick={() => setMostrarInstrucciones(false)} className="w-full py-4 rounded-xl font-bold text-white text-lg bg-[#2D6A4F] hover:bg-[#1B4332] transition-colors shadow-lg mt-4">
                   ¡Entendido, a jugar!
                 </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* MODAL DE CÓDIGO QR */}
+      <AnimatePresence>
+        {mostrarQR && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setMostrarQR(false)} className="absolute inset-0 bg-black/70 backdrop-blur-md cursor-pointer"></motion.div>
+            
+            <motion.div initial={{ opacity: 0, scale: 0.9, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.9, y: 20 }} className="bg-white rounded-3xl shadow-2xl w-full max-w-md relative z-10 overflow-hidden text-center">
+              <div className="bg-[#2D6A4F] p-6 text-white flex justify-between items-center">
+                <div className="flex items-center gap-3">
+                  <QrCode className="w-8 h-8" />
+                  <h3 className="text-xl font-bold">Escanea y explora</h3>
+                </div>
+                <button onClick={() => setMostrarQR(false)} className="p-2 bg-white/10 hover:bg-white/20 rounded-full transition-colors cursor-pointer"><X className="w-5 h-5" /></button>
+              </div>
+              
+              <div className="p-8 flex flex-col items-center">
+                <p className="text-gray-600 text-sm mb-6">
+                  Escanea este código con la cámara de tu celular para acceder al <strong>Sistema Departamental de Áreas Protegidas (SIDAP)</strong> y consultar la información oficial de las 19 áreas de Caldas.
+                </p>
+                <div className="bg-white p-4 rounded-2xl shadow-lg border-2 border-gray-100 mb-6">
+                  <QRCodeSVG 
+                    value="https://sidapcaldas.corpocaldas.gov.co/" 
+                    size={180} 
+                    fgColor="#1B4332"
+                    level="H"
+                  />
+                </div>
+                <p className="text-xs text-gray-400">
+                  Conecta la experiencia física de la maleta con el mundo digital.
+                </p>
               </div>
             </motion.div>
           </div>
