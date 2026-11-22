@@ -1,6 +1,5 @@
 import { motion } from 'motion/react';
 import { Play, Volume2 } from 'lucide-react';
-import audioNaturaleza from '../assets/audio/naturaleza.mp3'; 
 
 export default function SplashScreen({ onEnter }) {
   return (
@@ -18,14 +17,13 @@ export default function SplashScreen({ onEnter }) {
       <div className="absolute inset-0 bg-gradient-to-t from-[#0a1f14] via-transparent to-[#0a1f14]/70"></div>
 
       <div className="relative z-10 text-center px-6">
-        {/* Animación ultra suave: duración 3s, retraso de 0.5s, zoom sutil de 0.85 a 1 */}
         <motion.div
           initial={{ scale: 0.85, opacity: 0, y: 20 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
           transition={{ 
             duration: 3, 
             delay: 0.5, 
-            ease: [0.16, 1, 0.3, 1] // Curva de aceleración muy suave (easeOutExpo)
+            ease: [0.16, 1, 0.3, 1] 
           }} 
         >
           <h1 className="text-5xl md:text-7xl font-extrabold text-white mb-6 font-display tracking-tight drop-shadow-lg">
@@ -38,16 +36,10 @@ export default function SplashScreen({ onEnter }) {
           <motion.button
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 2.5, duration: 1.5 }} // El botón aparece al final
+            transition={{ delay: 2.5, duration: 1.5 }}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            onClick={() => {
-              // Aquí puedes inicializar el audio:
-              const audio = new Audio(audioNaturaleza);
-              audio.volume = 0.3;
-              audio.play();
-              onEnter();
-            }}
+            onClick={onEnter} // SOLO llamamos a onEnter, sin crear audios locales
             className="group relative inline-flex items-center gap-3 bg-[#E9C46A] text-[#1B4332] px-8 py-4 rounded-full font-bold text-lg hover:bg-yellow-300 transition-all shadow-[0_0_30px_rgba(233,196,106,0.4)] cursor-pointer"
           >
             <Play className="w-6 h-6 fill-current" />
