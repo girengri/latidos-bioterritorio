@@ -1,13 +1,12 @@
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
+import { motion } from 'motion/react'; // <-- Importamos motion
 import { areas } from '../data/areas';
 
 export default function MapaCaldas({ onSelectArea }) {
-  // Coordenadas centrales de Caldas
   const defaultCoords = [5.1, -75.3];
 
-  // Coordenadas para las 19 áreas protegidas
   const coords = {
     // PNN
     'los-nevados': [4.8500, -75.3500],
@@ -35,7 +34,13 @@ export default function MapaCaldas({ onSelectArea }) {
   };
 
   return (
-    <div className="h-[500px] w-full rounded-3xl overflow-hidden shadow-2xl relative z-0 border-4 border-white">
+    // 1. ANIMACIÓN DE ENTRADA: Envolvemos el div en un motion.div
+    <motion.div 
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+      className="h-[500px] w-full rounded-3xl overflow-hidden shadow-2xl relative z-0 border-4 border-white"
+    >
       <MapContainer center={defaultCoords} zoom={9} className="h-full w-full">
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -44,23 +49,21 @@ export default function MapaCaldas({ onSelectArea }) {
         {areas.map((area) => {
           const posicion = coords[area.id] || defaultCoords;
 
-          // Creamos un icono personalizado usando el color del área
+          // 2. ICONO PERSONALIZADO CON PULSO Y HOVER
           const customIcon = L.divIcon({
-            className: 'custom-marker',
+            className: 'custom-marker bg-transparent border-none',
             html: `
-              <div style="
-                background-color: ${area.color}; 
-                width: 20px; 
-                height: 20px; 
-                border-radius: 50%; 
-                border: 3px solid white; 
-                box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-                transition: transform 0.2s;
-              "></div>
+              <div class="relative flex items-center justify-center w-8 h-8 group">
+                <!-- Efecto de Onda (Pulso) -->
+                <span class="absolute inline-flex h-full w-full rounded-full opacity-75 animate-ping" style="background-color: ${area.color};"></span>
+                
+                <!-- Punto Central (Con Hover) -->
+                <span class="relative inline-flex rounded-full h-5 w-5 border-2 border-white shadow-md transition-transform duration-200 group-hover:scale-150" style="background-color: ${area.color};"></span>
+              </div>
             `,
-            iconSize: [20, 20],
-            iconAnchor: [10, 10],
-            popupAnchor: [0, -10]
+            iconSize: [32, 32], // Aumentamos el tamaño para que quepa el pulso
+            iconAnchor: [16, 16], // Centrado exacto
+            popupAnchor: [0, -16]
           });
 
           return (
@@ -86,6 +89,6 @@ export default function MapaCaldas({ onSelectArea }) {
           );
         })}
       </MapContainer>
-    </div>
+    </motion.div>
   );
 }
